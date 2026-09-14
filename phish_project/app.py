@@ -75,7 +75,7 @@ def set_language(lang):
     if lang not in ['ar', 'fr', 'en']:
         lang = 'ar'
     return render_template_string(HTML_TEMPLATE, lang=lang)
-    @app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
